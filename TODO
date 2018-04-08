@@ -1,0 +1,4 @@
+- check untested package.xml
+- align config.win32 and config.m4
+- fix APC handler valgrind warnings
+- write documentation in pecl/php.net format

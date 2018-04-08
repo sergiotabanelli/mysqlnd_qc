@@ -1,0 +1,73 @@
++++ qc_load.php +++
+
+Basic script to test the stability of the query cache under concurrent load.
+The script can also be used to get an idea of how the different storage handler
+compare to each other.
+
+Typical result on a 2.8GHz Dual-Core Pentium, MySQL, PHP, Memcache on the same server
+
+TTL = 1 second
+bin/ab -n 5000 -c 20 http://127.0.0.1/qc_load.php (run time ~5 mins)
+Apache restarted in between test runs
+
+Handler	    Version  Number of test runs  MIN(num_queries)  AVG(num_queries)  MAX(num_queries)
+APC         1.0.0                   5000         4 (100 %)      3396 (100 %)     13240 (100 %)
+default     1.0.0                   5001         4 (100 %)      4698 (138 %)     17296 (130 %)
+MEMCACHE    1.0.0                   1001         4 (100 %)      1598 ( 47 %)      8480 ( 64 %)
+nocache                             5001         4 (100 %)      1730 ( 50 %)      7232 ( 54 %)
+user        1.0.0                   5000         4 (100 %)      3469 (102 %)     11948 ( 90 %)
+
+MEMCACHE results need to be taken with a grain of salt. Memcache did not work 
+properly but stopped to work after about 1.200 requests. Prior runs showed 
+MEMCACHE much closer to APC and user.
+
+See inline documentation for further information.
+
+
++++ Oxid eShop 4 +++
+
+Oxid is an open source e-commerce solution available at http://www.oxid-esales.com . 
+In 2009 it has won a german open source award (http://www.osbf.de) and a prize money 
+of some 30.000 Euros...
+
+Oxid is a perfect candidate for the QC because, at the time of writing /
+community version 4.2.0_23610) is uses an pseudo-object oriented approach of storing
+data in the database resulting in many small queries. The demo installation runs 150 
+queries on the front page. Real-life customized installations are said to do up to
+5.000(!) queries on the front page... - amazing such products can win awards.
+
+However, Oxid is nice for testing how QC can improve database (and CPU their
+PHP scripts burns CPU power) bound applications. The results say absolutely
+nothing about other apps. It all depends on what role the DB load plays for a
+particular application.
+
+  Tuning Oxid
+
+Add "mysqlnd_qc_change_handler("apc");" at the beginning of index.php. Check
+the config.inc.php for debug settings that dump SQL queries on the screen to
+find places that need tuning. 
+
+Suggestions for different setups:
+
+./core/adodblite/adodb.inc.php:311:     $sql = 'qc=1' . $sql;
+ --> cache every query, for comparison with MySQL Server Query Cache
+ 
+./core/oxarticle.php:3450:        $oAmPriceList->selectString( "/*qc=1*/select * from oxprice2article where oxartid = '$sArtID' and $sShopSelect order by oxamount ");
+--> cache a very prominent front page query, for tuning within 10 seconds
+
+./ no changes
+--> for out-of-the-box performance
+
+  Results
+
+You can (abuse) the cache monitor script and ab to meter performance.
+
+
+
+
+  
+  
+
+ 
+
+

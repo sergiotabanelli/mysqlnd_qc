@@ -1,0 +1,15 @@
+Basic cache monitor web script which shows:
+
+ - PHP version
+ - cache version
+ - cache handler version
+ - relevant php.ini settings
+ - QC constants
+ - if handler supports it (only APC): cache contents and cache entry stats
+ - if handler supports it (only APC): cache stats downloads (CSV)
+ - how to aggregate per-process statistics using auto_append script
+
+Make sure that only those can access it which shall be allowed to see the
+information it provides, for example, use a .htaccess to control access.
+
+

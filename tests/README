@@ -1,0 +1,35 @@
+The tests are build using the standard PHP test framework "run-tests.php".
+See http://qa.php.net/write-test.php on how to write tests.
+
+The file "myenv" contains a list of environment variables that control
+the test run. You must set those environment variables prior to running
+the tests. 
+
+There are storage driver/handler specific tests and tests that run 
+with all drivers. In general the tests try to abstract driver differences.
+Note the environment variable MYSQLND_QC_HANDLER="default" which controls
+the storage driver that the tests will use by default. If you want to check
+the code coverage, run all tests again and again with different 
+MYSQLND_QC_HANDLER settings until you have tested all storage driver/handler
+that you have enabled at build time.
+
+Running the tests:
+
+  sapi/cli/php run-tests.php ext/mysqlnd_qc/tests
+
+
+To run all tests with all handlers, and use gcov use the following bash for 
+loop
+
+for i in 'default' 'sqlite' 'apc' 'memcache' 'user' 'userp'; do
+	export MYSQLND_QC_HANDLER=$i;
+	make lcov TESTS=ext/mysqlnd_qc/tests ;
+done
+
+To run all tests under valgrind in a loop of all handlers :
+for i in 'default' 'sqlite' 'apc' 'memcache' 'user' 'userp';
+	do export MYSQLND_QC_HANDLER=$i;
+	echo "-------------------------";
+	echo $i;
+	./php run-tests.php -m ext/mysqlnd_qc/;
+done

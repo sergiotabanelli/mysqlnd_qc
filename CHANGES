@@ -1,0 +1,33 @@
+1.2.0 - alpha
+
+  * Fixed PHP 5.5 build (Credits: Remi Collet [Fedora])
+  * New constants: MYSQLND_QC_VERSION, MYSQLND_QC_VERSION_ID
+  * Fixed APC storage handler mutex deadlock (new handler version: 1.0.2)
+
+1.1.1 - beta
+
+  Release date: 04/2012
+
+1.1.0 - alpha
+
+  Release date: 04/2012
+  Motto/theme : Schema pattern based caching and mysqlnd_ms support
+
+  * Introduced mysqlnd_qc_set_cache_condition() for built-in schema pattern based caching
+  * Changed is_select() signature from `bool is_select()` to `mixed is_select()`. Mixed can be
+    either boolean or array(long ttl, string server_id). This is needed by PECL/mysqlnd_ms
+  * Introduce MYSQLND_QC_SERVER_ID_SWITCH which allows grouping of cache entries from different
+    physical connections. This is needed by PECL/mysqlnd_ms.
+  * Include charset number for cache entry hashing. This should prevent serving result
+    sets which have the wrong charset. API change: get_hash_key expects new "charsetnr" (int)
+    parameter after "port"
+  * Introduced mysqlnd_qc.ignore_sql_comments to control whether SQL comments are ignored for hashing
+  * Excluded SQL comments from SQL string for cache entry hashing. This fixes the issue
+    of holding the same result set multiple times in the cache
+  * Standard/default handler now reports "valid_until" through mysqlnd_qc_get_cache_info()
+  * Fix bug #59959 (config.m4, wrong library - 64bit memcached handler builds) (Credits: Remi Collet)
+  * Restructure code for mysqlnd_ms compatibility
+  * Fixed APC storage handler build for APC 3.1.9+
+  * Fixed 5.4 build
+
+(CHANGES file has been introduced in 01/2012)

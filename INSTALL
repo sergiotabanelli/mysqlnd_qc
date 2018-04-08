@@ -1,0 +1,41 @@
+Project's wiki page (temporary):
+
+    * http://forge.mysql.com/wiki/MySQLnd_Query_Cache_Plugin_for_PHP
+
+Unix build:
+
+    * Get the source of the query cache extension
+          o this is what you have in front of you :-)
+    * Get a copy of the latest PHP 5.3 development from SVN version
+          o SVN instructions (note the auto* tool requirements, svn checkout http://svn.php.net/repository/php/php-src/branches/PHP_5_3 php-src-5.3
+          o or use latest source code snapshots (tar.gz, tar.bz2)
+          o trunk/5.3.99-dev from SVN also works
+    * Copy the query cache extension into the PHP build tree
+          o cd path/to/php-src-5.3
+          o mkdir -p ext/mysqlnd_qc
+          o cp -R path/to/php-mysqlnd-qc-prototype/* ext/mysqlnd_qc
+    * Run buildconf once to rebuild the configure script
+          o ./buildconf --force
+    * Configure PHP to support MySQL and the query cache extension
+          o Check available configure options: ./configure --help | grep -i mysql
+          o Basic configure: ./configure --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --enable-mysqlnd-qc --enable-debug
+    * Build PHP with query cache support
+          o make clean && make
+
+
+To enable APC, Memcache and/or SQLite storage:
+
+     * APC support
+          o You cannot use APC 3.1.3p1 from [1] - it is too old! Use the latest code from the SVN
+          o Checkout PECL repository by following the PHP SVN FAQ
+          o Copy PECL APC into the PHP build tree, cp -R path/to/pecl/apc/trunk path/to/php-src-5.3/ext/apc
+          o Rebuild configure using ./buildconf --force
+          o Add --enable-apc and --enable-mysqlnd-qc-apc to the basic configure shown above, rebuild PHP
+          o APC support requires a static build PHP and the mysqlnd result set query cache plugin
+    * Memcache support
+          o Install Memcache and libmemcached (0.38 or newer)
+          o Rebuild configure using ./buildconf --force
+          o Add --with-libmemcache-dir and --enable-mysqlnd-qc-memcache to the basic configure shown above, rebuild PHP
+    * SQLIte support
+          o We use the built-in SQLite3 library of PHP, using a system one is experimental
+          o Add --enable-mysqlnd-qc-sqlite to the basic configure shown above, rebuild PHP

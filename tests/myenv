@@ -1,0 +1,13 @@
+export MYSQLND_QC_HANDLER="default"
+export TEST_PHP_EXECUTABLE="/home/nixnutz/php/php-src/branches/PHP_5_3_qc/sapi/cli/php"
+export MYSQL_TEST_HOST="localhost"
+export MYSQL_TEST_PORT="3305"
+export MYSQL_TEST_USER="root"
+export MYSQL_TEST_PASSWD="root"
+export MYSQL_TEST_DB="phptest"
+export MYSQL_TEST_ENGINE="InnoDB"
+export MYSQL_TEST_SOCKET="/tmp/mysql.sock"
+export MYSQL_TEST_EXPERIMENTAL=0
+export MYSQL_TEST_SKIP_CONNECT_FAILURE=1
+export MYSQL_TEST_CONNECT_FLAGS=0
+

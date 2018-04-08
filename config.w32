@@ -1,0 +1,33 @@
+// $Id$
+// vim:ft=javascript
+
+ARG_ENABLE("mysqlnd-qc", "enable mysqlnd_qc support", "no");
+ARG_ENABLE("mysqlnd-qc-apc", "enable mysqlnd_qc apc support", "no");
+ARG_ENABLE("mysqlnd-qc-sqlite", "enable mysqlnd_qc sqlite support", "no");
+
+if (PHP_MYSQLND_QC != "no") {
+	ADD_EXTENSION_DEP('mysqlnd_qc', 'mysqlnd');
+
+	mysqlnd_qc_sources = "php_mysqlnd_qc.c mysqlnd_qc.c mysqlnd_qc_ps.c mysqlnd_qc_logs.c mysqlnd_qc_zval_util.c mysqlnd_qc_user_handler.c mysqlnd_qc_std_handler.c mysqlnd_qc_classes.c mysqlnd_qc_object_handler.c mysqlnd_qc_nop_handler.c mysqlnd_qc_tokenize.c";
+	if (PHP_MYSQLND_QC_APC != "no") {
+		if (CHECK_HEADER_ADD_INCLUDE("apc_zend.h", "CFLAGS_MYSQLND_QC", "ext\\apc")
+			&& CHECK_HEADER_ADD_INCLUDE("php_apc.h", "CFLAGS_MYSQLND_QC", "ext\\apc")) {
+			ADD_EXTENSION_DEP('mysqlnd_qc', 'apc');
+			AC_DEFINE("MYSQLND_QC_HAVE_APC", 1, "Whether APC is enabled");
+			mysqlnd_qc_sources = mysqlnd_qc_sources + " mysqlnd_qc_apc_handler.c ";
+		} else {
+			WARNING("APC support for mysqlnd_qc isn't enabled, headers not found");
+		}
+	}
+	if (PHP_MYSQLND_QC_SQLITE != "no") {
+		if (CHECK_HEADER_ADD_INCLUDE("sqlite3.h", "CFLAGS_MYSQLND_QC", "ext\\sqlite3\\libsqlite")) {
+			ADD_EXTENSION_DEP('mysqlnd_qc', 'sqlite3');
+			AC_DEFINE("MYSQLND_QC_HAVE_SQLITE", 1, "Whether SQLite is enabled");
+			mysqlnd_qc_sources = mysqlnd_qc_sources + " mysqlnd_qc_sqlite_handler.c ";
+		} else {
+			WARNING("sqlite3 support for mysqlnd_qc isn't enabled, headers not found");
+		}
+	}
+	EXTENSION("mysqlnd_qc", mysqlnd_qc_sources);
+}
+

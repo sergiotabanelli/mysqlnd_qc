@@ -1,0 +1,34 @@
+NOTE: Requires PHP 5.3.3-dev or later and APC/Memcache dev from PECL (do not use release downloads from pecl.php.net)
+
+The PHP query result cache plugin for the MySQL native driver for PHP is a PHP extension for caching query results on the client. The plugin-in operates transparent from a user perspective. It supports all
+PHP MySQL APIs and can be used with each and every existing PHP application without having to make changes to the application. The client side PHP query cache supports different storage media for
+holding cached data and allows users to implement their own caching logic. The default invalidation strategy is TTL (Time to Live).
+
+The client side PHP query cache is not related to the MySQL Server Query Cache. The MySQL Server Query Cache operates at the other side of the line: at the server. Also, the MySQL Server Query Cache
+uses a different invalidation strategy.
+
+Advantages of any client side query cache:
+
+    * traditional MySQL scale-out strategy: scale by client
+    * fine-grained cache control on a per application/client basis (not per database/server)
+    * no network latency when fetching query results
+    * MySQL Server Query Cache bottle-neck is gone
+    * lowers MySQL server load
+
+Advantages of PHP client-side query cache plugin for the MySQL native driver for PHP:
+
+    * no application changes required
+    * works with all PHP MySQL APIs: ext/mysql, ext/mysqli, PDO_MYSQL
+    * optional: user-defined cache control and cache storage
+    * supports a variety of storage media with different properties: process memory, APC, Memcache
+    * process memory storage: always available
+    * APC (shared memory) storage: cache entries get shared between all PHP processes running on one machine
+    * Memcache storage: cache entries can be shared between machines
+
+The default invalidation strategy of the PHP client-side query result cache plugin is TTL (Time to Live). Query results will be cached for a user-defined number of seconds regardless if the underlying data
+structures, the data or its access privileges change in the meantime. In other words: stale data can be served from the cache. For certain applications this is an acceptable limitation, for example,
+think of news that are refreshed every 30 seconds. If serving stale data is not an option, users can implement their own invalidation strategy via user-defined storage handlers.
+
+Known limitations and work arounds:
+
+    * can serve stale data (implement user-defined invalidation rules)
