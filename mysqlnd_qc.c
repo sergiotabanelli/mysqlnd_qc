@@ -474,6 +474,9 @@ mysqlnd_qc_handle_query(MYSQLND_CONN_DATA * conn, const char * const query, size
 		STATS_TIME_DIFF((*conn_data_pp)->run_time);
 		(*conn_data_pp)->query_active_with_cache = FALSE;
 		MYSQLND_QC_INC_STATISTIC(QC_STAT_QUERY_NOT_CACHED);
+		if (server_id) {
+			efree(server_id);
+		}
 		DBG_RETURN(ret);
 	}
 
